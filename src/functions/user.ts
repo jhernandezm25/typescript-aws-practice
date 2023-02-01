@@ -24,7 +24,7 @@ class User {
         const myUser = data.data
         if (myUser.length === 0) {
             response = getResponse(STATUS_CODE.Success, MESSAGES.NotFound, {});
-            return response
+            return res.json(response)
         }
         console.log(myUser[0])
         response = getResponse(STATUS_CODE.Success, MESSAGES.Success, myUser[0]);

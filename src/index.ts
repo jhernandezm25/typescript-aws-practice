@@ -16,6 +16,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/user', user.save)
+app.get('/user/:email', user.findOne)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

@@ -13,6 +13,19 @@ class User {
         await moongoseController.disconnect();
         return res.json({user:body})
     }
+
+    async findOne(req: Request, res: Response){
+        const email = req.params.email
+        const data = await user.findByEmail(email);
+        console.log(data.data[0].country)
+        return res.json(data)
+    }
+
+    async findByEmail(email:string) {
+        await moongoseController.connect();
+        const user = await userModel.find({email});
+        return {status:200, data:user}
+    }
 }
 
 const user = new User;

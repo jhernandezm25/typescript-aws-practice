@@ -83,6 +83,25 @@ class User {
             return res.json(response)
         }
     }
+
+    async deleteUser(req: Request, res: Response) {
+        let response;
+        try {
+            await moongoseController.connect();
+            const email: string = req.params.email;
+            const data = await user.findByEmail(email);
+            if (data.data.length === 0) {
+                response = getResponse(STATUS_CODE.Success, MESSAGES.NotFound, {});
+                return res.json(response)
+            }
+            await userModel.findOneAndDelete({ email })
+            response = getResponse(STATUS_CODE.Success, MESSAGES.Delete, { email });
+            return res.json(response)
+        } catch (e: any) {
+            response = getResponse(STATUS_CODE.InternalError, MESSAGES.InternalError, e.message);
+            return res.json(response)
+        }
+    }
 }
 
 const user = new User;

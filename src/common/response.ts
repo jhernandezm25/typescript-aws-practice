@@ -3,7 +3,8 @@ export enum MESSAGES {
     NotFound = 'Not Found',
     Success = 'Success',
     InternalError = 'Internal Error',
-    UserExist = 'The user is already registered'
+    UserExist = 'The user is already registered',
+    Delete = "Register deleted"
   }
   
   export enum STATUS_CODE {

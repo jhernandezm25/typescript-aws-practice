@@ -18,6 +18,7 @@ app.get('/', (req: Request, res: Response) => {
 app.post('/user', user.save);
 app.get('/user/:email', user.findOne);
 app.patch('/user/:email', user.updateUser);
+app.delete('/user/:email', user.deleteUser)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

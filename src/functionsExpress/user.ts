@@ -20,23 +20,29 @@ class User {
             await moongoseController.disconnect();
             return res.json(response)
         } else {
-            response = getResponse(STATUS_CODE.BadRequest, MESSAGES.UserExist,null);
+            response = getResponse(STATUS_CODE.BadRequest, MESSAGES.UserExist, null);
             return res.json(response);
         }
     }
 
     async findOne(req: Request, res: Response) {
         let response;
-        const email: string = req.params.email;
-        const data = await user.findByEmail(email);
-        const myUser = data.data
-        if (myUser.length === 0) {
-            response = getResponse(STATUS_CODE.Success, MESSAGES.NotFound, {});
+        try {
+            const email: string = req.params.email;
+            const data = await user.findByEmail(email);
+            const myUser = data.data
+            if (myUser.length === 0) {
+                response = getResponse(STATUS_CODE.Success, MESSAGES.NotFound, {});
+                return res.json(response)
+            }
+            await moongoseController.disconnect();
+            response = getResponse(STATUS_CODE.Success, MESSAGES.Success, myUser[0]);
+            return res.json(data)
+        } catch (e: any) {
+            response = getResponse(STATUS_CODE.InternalError, MESSAGES.InternalError, e.message);
             return res.json(response)
         }
-        await moongoseController.disconnect();
-        response = getResponse(STATUS_CODE.Success, MESSAGES.Success, myUser[0]);
-        return res.json(data)
+
     }
 
     async findByEmail(email: string): Promise<response> {
@@ -54,6 +60,27 @@ class User {
         } catch (e: any) {
             response = getResponse(STATUS_CODE.InternalError, MESSAGES.InternalError, e.message);
             return response
+        }
+    }
+
+    async updateUser(req: Request, res: Response) {
+        let response;
+        try {
+            await moongoseController.connect();
+            const email: string = req.params.email;
+            const body = req.body;
+            const data = await user.findByEmail(email);
+            if (data.data.length === 0) {
+                response = getResponse(STATUS_CODE.Success, MESSAGES.NotFound, {});
+                return res.json(response)
+            }
+            await userModel.findOneAndUpdate({ email }, body, { new: true });
+            const newUser = await user.findByEmail(email);
+            response = getResponse(STATUS_CODE.Success, MESSAGES.Success, newUser.data);
+            return res.json(response)
+        } catch (e: any) {
+            response = getResponse(STATUS_CODE.InternalError, MESSAGES.InternalError, e.message);
+            return res.json(response)
         }
     }
 }

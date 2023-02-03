@@ -21,7 +21,7 @@ class User {
             return res.json(response)
         } else {
             response = getResponse(STATUS_CODE.BadRequest, MESSAGES.UserExist,null);
-            return response;
+            return res.json(response);
         }
     }
 
@@ -34,7 +34,7 @@ class User {
             response = getResponse(STATUS_CODE.Success, MESSAGES.NotFound, {});
             return res.json(response)
         }
-        console.log(myUser[0])
+        await moongoseController.disconnect();
         response = getResponse(STATUS_CODE.Success, MESSAGES.Success, myUser[0]);
         return res.json(data)
     }
@@ -49,7 +49,6 @@ class User {
                 return response
             }
             const user = await userModel.find({ email });
-            await moongoseController.disconnect();
             response = getResponse(STATUS_CODE.Success, MESSAGES.Success, user)
             return response
         } catch (e: any) {

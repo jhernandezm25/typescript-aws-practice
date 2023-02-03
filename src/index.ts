@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-import user from './functions/user';
+import user from './functionsExpress/user';
 import dotenv from 'dotenv';
 const bodyParser = require('body-parser')
 
